@@ -17,7 +17,6 @@ const isVAlidRequestBody = function (requestBody) {
 
 const createUser = async function (req, res) {
     try {
-        const mobileRegex = /^[6-9][0-9]+$/
         const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
         const nameRegex = /^[a-z\s]+$/i
         let data = req.body
@@ -47,7 +46,7 @@ const createUser = async function (req, res) {
                 return res.status(400).send({ status: false, msg: ' phone no. is required' })
             }
 
-            if (!data.phone.match(mobileRegex)) {
+            if (! /^[6-9][0-9]+$/.test(data.phone)) {
                 return res.status(400).send({ status: false, msg: "phone number must be start from 6,7,8,9" })
             }
 

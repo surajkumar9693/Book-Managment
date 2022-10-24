@@ -99,7 +99,7 @@ const createBooks = async function (req, res) {
         if (!releasedAt.match(dateFormate)) {
             return res.status(400).send({ status: false, msg: "Invalid format of date :- YYYY-MM-DD" })
         }
-        
+
 
         let createBookData = await bookModel.create(requestbody)
         return res.status(201).send({ status: true, msg: "successfully created", data: createBookData })
@@ -126,12 +126,12 @@ const getBooks = async function (req, res) {
             return res.status(400).send({ status: false, msg: "please enter user id" })
         }
 
-        let getBooksDetails = await bookModel.find({ isDeleted: false, ...requestBody }).sort({title: 1}).collation({locale: "en"}).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+        let getBooksDetails = await bookModel.find({ isDeleted: false, ...requestBody }).sort({ title: 1 }).collation({ locale: "en" }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
 
-        if (getBooksDetails.length == 0) {
+        if (!getBooksDetails.length) {
             return res.status(404).send({ status: false, msg: 'no book found' })
         } else {
-            return res.status(200).send({ status: true, msg: "get data successfully", data: getBooksDetails })
+            return res.status(200).send({ status: true, msg: "Books fetch is successful", data: getBooksDetails })
         }
 
 
@@ -160,7 +160,7 @@ const getBookById = async function (req, res) {
         }
 
 
-        let reviewFind = await reviewModel.find({ bookId: bookId, isDeleted:false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
+        let reviewFind = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
         let result = bookData.toJSON()
         // let result = bookData._doc
         result.reviewData = reviewFind
@@ -194,12 +194,12 @@ const updateBook = async function (req, res) {
         let { title, excerpt, ISBN, releasedAt } = updatedata;
 
         const dateFormate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
-  
-        if(releasedAt){  
+
+        if (releasedAt) {
             if (!releasedAt.match(dateFormate)) {
                 return res.status(400).send({ status: false, msg: "Invalid format of date :- YYYY-MM-DD" })
             }
-            }
+        }
 
         if (!isVAlidRequestBody(updatedata)) {
             return res.status(400).send({ status: false, msg: "please input Book Details" })

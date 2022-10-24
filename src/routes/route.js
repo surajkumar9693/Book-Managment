@@ -10,13 +10,14 @@ aws.config.update({
 
 let uploadFile= async ( file) =>{
     return new Promise( function(resolve, reject) {
+         
      // this function will upload file to aws and return the link
      let s3= new aws.S3({apiVersion: '2006-03-01'}); // we will be using the s3 service of aws
  
      var uploadParams= {
          ACL: "public-read",
          Bucket: "classroom-training-bucket",  //HERE
-         Key: "abc/" + file.originalname, //HERE 
+         Key: "xyz/" + file.originalname, //HERE 
          Body: file.buffer
      }
  
@@ -25,8 +26,8 @@ let uploadFile= async ( file) =>{
          if(err) {
              return reject({"error": err})
          }
-         console.log(data)
-         console.log("file uploaded succesfully")
+        //  console.log(data)
+        //  console.log("file uploaded succesfully")
          return resolve(data.Location)
      })
  
@@ -42,7 +43,7 @@ router.post("/write-file-aws", async function(req, res){
         if(files && files.length>0){
             //upload to s3 and get the uploaded link
             // res.send the link back to frontend/postman
-            let uploadedFileURL= await uploadFile( files[0] )
+            let uploadedFileURL= await uploadFile( files[0])
             res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
         else{
@@ -74,10 +75,10 @@ router.post("/login", userController.loginUser)
 // ---------------------------|| BOOK ||--------------------------------
 
 router.post("/books", middleware.authentication, middleware.bookAuthorization, bookController.createBooks)
-router.get("/books", middleware.authentication, bookController.getBooks)
-router.get("/books/:bookId", middleware.authentication, bookController.getBookById)
-router.put("/books/:bookId", middleware.authentication, middleware.Authorisation, bookController.updateBook)
-router.delete("/books/:bookId", middleware.authentication, middleware.Authorisation, bookController.deleteBook)
+router.get("/books", middleware.authentication, middleware.bookAuthorization, bookController.getBooks)
+router.get("/books/:bookId", middleware.authentication, middleware.bookAuthorization, bookController.getBookById)
+router.put("/books/:bookId", middleware.authentication, middleware.bookAuthorization,bookController.updateBook)
+router.delete("/books/:bookId", middleware.authentication, middleware.bookAuthorization, bookController.deleteBook)
 
 // ----------------------------|| REVIEW ||--------------------------------
 
